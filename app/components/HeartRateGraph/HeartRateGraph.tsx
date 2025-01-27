@@ -11,6 +11,9 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
+  TooltipItem,
+  Chart as ChartType,
+  ChartOptions,
 } from "chart.js";
 
 import styles from "./HeartRateGraph.module.css";
@@ -60,7 +63,7 @@ const HeartRateGraph = ({ username }: Props) => {
   useEffect(() => {
     const interval = setInterval(fetchHeartRateData, 1000);
     return () => clearInterval(interval);
-  }, [username]);
+  }, [fetchHeartRateData, username]);
   const chartData = {
     labels: heartRateData.map((data) =>
       new Date(data.timestamp).toLocaleTimeString([], {
@@ -73,7 +76,7 @@ const HeartRateGraph = ({ username }: Props) => {
       {
         label: "Heart Rate (BPM)",
         data: heartRateData.map((data) => data.heartRate),
-        borderColor: (context: any) => {
+        borderColor: (context: { chart: ChartType }) => {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
           if (!chartArea) {
@@ -96,7 +99,7 @@ const HeartRateGraph = ({ username }: Props) => {
       },
     ],
   };
-  const chartOptions = {
+  const chartOptions: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
@@ -111,14 +114,13 @@ const HeartRateGraph = ({ username }: Props) => {
       y: {
         min: 2,
         max: 5,
-        stepSize: 1,
         grid: {
           display: false,
         },
         ticks: {
           autoSkip: false,
           color: "white",
-          callback: (value: number) => {
+          callback: (value: string | number) => {
             if (value === 2 || value === 3 || value === 4 || value === 5) {
               return value;
             }
@@ -151,7 +153,7 @@ const HeartRateGraph = ({ username }: Props) => {
         borderColor: "gray",
         borderWidth: 1,
         callbacks: {
-          label: (tooltipItem: any) => {
+          label: (tooltipItem: TooltipItem<"line">) => {
             const closestData = heartRateData[tooltipItem.dataIndex];
             const closestTimestamp = new Date(
               closestData.timestamp
