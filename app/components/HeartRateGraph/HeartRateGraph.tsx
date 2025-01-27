@@ -155,6 +155,14 @@ const HeartRateGraph = ({ username }: Props) => {
         callbacks: {
           label: (tooltipItem: TooltipItem<"line">) => {
             const closestData = heartRateData[tooltipItem.dataIndex];
+            const closestZone =
+              closestData.heartRate > 160
+                ? "5"
+                : closestData.heartRate > 120
+                  ? "4"
+                  : closestData.heartRate > 80
+                    ? "3"
+                    : "2";
             const closestTimestamp = new Date(
               closestData.timestamp
             ).toLocaleTimeString([], {
@@ -162,7 +170,7 @@ const HeartRateGraph = ({ username }: Props) => {
               minute: "2-digit",
               second: "2-digit",
             });
-            return `Time: ${closestTimestamp} | Heart Rate: ${tooltipItem.raw} BPM`;
+            return ` Heart Rate: ${tooltipItem.raw} | Zone: ${closestZone} | BPM Time: ${closestTimestamp} `;
           },
         },
       },
