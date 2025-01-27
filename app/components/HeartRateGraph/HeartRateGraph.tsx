@@ -38,7 +38,8 @@ const HeartRateGraph = ({ username }: Props) => {
       `https://nowatch-fullstack-test-assignment.vercel.app/api/measurements?username=${username}`
     );
     const data = await response.json();
-    const newHeartRateData = data.measurements;
+    const newHeartRateData: { timestamp: number; heartRate: number }[] =
+      data.measurements;
     if (response.ok) {
       setHeartRateData((oldHeartRateData) => {
         const updatedData = [...oldHeartRateData];
