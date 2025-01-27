@@ -1,0 +1,22 @@
+.header {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  font-size: 16px;
+}
+
+.input {
+  height: 32px;
+  font-size: 20px;
+  text-align: center;
+  background: #ece7de;
+  border-radius: 10px;
+}

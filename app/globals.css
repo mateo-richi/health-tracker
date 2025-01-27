@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  background: #ece7de;
+  font-family: Helvetica, sans-serif;
+}
+
+p {
+  color: #ece7de;
+}
