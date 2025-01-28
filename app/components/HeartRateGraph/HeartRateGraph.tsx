@@ -53,7 +53,7 @@ const HeartRateGraph = ({ username }: Props) => {
             updatedData.push(newData);
           }
         });
-        if (updatedData.length > 60) {
+        if (updatedData.length > 180) {
           updatedData.shift();
         }
         return updatedData;
@@ -61,7 +61,7 @@ const HeartRateGraph = ({ username }: Props) => {
     }
   };
   useEffect(() => {
-    const interval = setInterval(fetchHeartRateData, 1000);
+    const interval = setInterval(fetchHeartRateData, 4000);
     return () => clearInterval(interval);
   }, [fetchHeartRateData, username]);
   const chartData = {
@@ -178,8 +178,8 @@ const HeartRateGraph = ({ username }: Props) => {
   };
   return (
     <div className={styles.graph}>
-      {heartRateData.length === 0 ? (
-        <p>Loading...</p>
+      {heartRateData.length < 4 ? (
+        <p>Loading... (WIP)</p>
       ) : (
         <Line data={chartData} options={chartOptions} />
       )}
