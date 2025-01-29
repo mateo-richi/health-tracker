@@ -4,13 +4,17 @@ import React, { useState } from "react";
 
 import HeartRateGraph from "./components/HeartRateGraph/HeartRateGraph";
 import SignInForm from "./components/SignInForm/SignInForm";
+import SignOutButton from "./components/SignOutButton/SignOutButton";
 import ThemeSelector from "./components/ThemeSelector/ThemeSelector";
 
-const Page: React.FC = () => {
+const Page = () => {
   const [username, setUsername] = useState("");
   const [theme, setTheme] = useState("black");
   const onSignIn = (newUsername: string) => {
     setUsername(newUsername);
+  };
+  const onSignOut = () => {
+    setUsername("");
   };
   return (
     <div
@@ -38,19 +42,7 @@ const Page: React.FC = () => {
         )}
       </div>
       <ThemeSelector setTheme={setTheme} />
-      {username !== "" && (
-        <p
-          onClick={() => onSignIn("")}
-          style={{
-            paddingTop: "20px",
-            fontSize: "20px",
-            color: "red",
-            cursor: "pointer",
-          }}
-        >
-          SIGN OUT
-        </p>
-      )}
+      {username !== "" && <SignOutButton onSignOut={onSignOut} />}
     </div>
   );
 };

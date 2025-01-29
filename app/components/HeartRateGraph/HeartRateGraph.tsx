@@ -18,6 +18,8 @@ import {
 
 import styles from "./HeartRateGraph.module.css";
 
+import Loading from "../Loading/Loading";
+
 ChartJS.register(
   Title,
   Tooltip,
@@ -36,34 +38,49 @@ const HeartRateGraph = ({ username }: Props) => {
   const [heartRateData, setHeartRateData] = useState<
     { timestamp: number; heartRate: number }[]
   >([]);
+  const [buffer, setBuffer] = useState<
+    { timestamp: number; heartRate: number }[]
+  >([]);
+  const [bufferIndex, setBufferIndex] = useState(0);
   const fetchHeartRateData = async () => {
     const response = await fetch(
       `https://nowatch-fullstack-test-assignment.vercel.app/api/measurements?username=${username}`
     );
+    if (!response.ok) return;
     const data = await response.json();
     const newHeartRateData: { timestamp: number; heartRate: number }[] =
       data.measurements;
-    if (response.ok) {
+    setBuffer((prevBuffer) => {
+      const existingTimestamps = new Set([
+        ...prevBuffer.map((d) => d.timestamp),
+        ...heartRateData.map((d) => d.timestamp),
+      ]);
+      const uniqueNewData = newHeartRateData.filter(
+        (d) => !existingTimestamps.has(d.timestamp)
+      );
+
+      return [...prevBuffer, ...uniqueNewData];
+    });
+  };
+  useEffect(() => {
+    const interval = setInterval(fetchHeartRateData, 1000);
+    return () => clearInterval(interval);
+  }, [username]);
+  useEffect(() => {
+    const interval = setInterval(() => {
       setHeartRateData((oldHeartRateData) => {
-        const updatedData = [...oldHeartRateData];
-        newHeartRateData.forEach((newData) => {
-          if (
-            !updatedData.some((data) => data.timestamp === newData.timestamp)
-          ) {
-            updatedData.push(newData);
-          }
-        });
+        if (bufferIndex >= buffer.length) return oldHeartRateData;
+        const nextItem = buffer[bufferIndex];
+        const updatedData = [...oldHeartRateData, nextItem];
         if (updatedData.length > 180) {
           updatedData.shift();
         }
         return updatedData;
       });
-    }
-  };
-  useEffect(() => {
-    const interval = setInterval(fetchHeartRateData, 4000);
+      setBufferIndex((prevIndex) => prevIndex + 1);
+    }, 4000);
     return () => clearInterval(interval);
-  }, [fetchHeartRateData, username]);
+  }, [bufferIndex]);
   const chartData = {
     labels: heartRateData.map((data) =>
       new Date(data.timestamp).toLocaleTimeString([], {
@@ -88,7 +105,7 @@ const HeartRateGraph = ({ username }: Props) => {
             0,
             chartArea.top
           );
-          gradient.addColorStop(0, "orange");
+          gradient.addColorStop(0, "yellow");
           gradient.addColorStop(1, "red");
           return gradient;
         },
@@ -179,9 +196,16 @@ const HeartRateGraph = ({ username }: Props) => {
   return (
     <div className={styles.graph}>
       {heartRateData.length < 4 ? (
-        <p>Loading... (WIP)</p>
+        <Loading />
       ) : (
-        <Line data={chartData} options={chartOptions} />
+        <>
+          <img
+            src={`/images/heart.svg`}
+            alt={`heart`}
+            className={styles.heart}
+          />
+          <Line data={chartData} options={chartOptions} />
+        </>
       )}
     </div>
   );

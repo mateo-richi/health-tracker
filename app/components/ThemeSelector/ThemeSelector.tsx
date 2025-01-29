@@ -24,17 +24,22 @@ interface Props {
 }
 
 const ThemeSelector = ({ setTheme }: Props) => {
+  const themes = [
+    "black",
+    "amethyst",
+    "falcon_eye",
+    "labradorite",
+    "lapis_lazuli",
+    "malachite",
+    "rose_quartz",
+    "tigers_eye",
+    "white_agate",
+  ];
   return (
     <div className={styles.container}>
-      <Theme theme="black" setTheme={() => setTheme("black")} />
-      <Theme theme="amethyst" setTheme={() => setTheme("amethyst")} />
-      <Theme theme="falcon_eye" setTheme={() => setTheme("falcon_eye")} />
-      <Theme theme="labradorite" setTheme={() => setTheme("labradorite")} />
-      <Theme theme="lapis_lazuli" setTheme={() => setTheme("lapis_lazuli")} />
-      <Theme theme="malachite" setTheme={() => setTheme("malachite")} />
-      <Theme theme="rose_quartz" setTheme={() => setTheme("rose_quartz")} />
-      <Theme theme="tigers_eye" setTheme={() => setTheme("tigers_eye")} />
-      <Theme theme="white_agate" setTheme={() => setTheme("white_agate")} />
+      {themes.map((theme) => (
+        <Theme key={theme} theme={theme} setTheme={() => setTheme(theme)} />
+      ))}
     </div>
   );
 };
