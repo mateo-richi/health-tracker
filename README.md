@@ -1,3 +1,10 @@
+AUTHOR COMMENTS
+
+- Background themes images are blurry, ideally better quality images should be uploaded
+- Measurements endpoint is quite inconsistent, sometimes it doenst work, and also the number of measurements in the response changes. This is the reason why I implemented a buffer array to make sure the graph gets updated with a single item every 4 seconds, this helps having a consistent experience for the user. Without the buffer, the user would see different amounts of measurements being added with random time differences between measurements
+
+HOW TO RUN BELLOW
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

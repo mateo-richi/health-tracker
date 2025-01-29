@@ -51,14 +51,12 @@ const HeartRateGraph = ({ username }: Props) => {
     const newHeartRateData: { timestamp: number; heartRate: number }[] =
       data.measurements;
     setBuffer((prevBuffer) => {
-      const existingTimestamps = new Set([
+      const prevBufferTimestamps = new Set([
         ...prevBuffer.map((d) => d.timestamp),
-        ...heartRateData.map((d) => d.timestamp),
       ]);
       const uniqueNewData = newHeartRateData.filter(
-        (d) => !existingTimestamps.has(d.timestamp)
+        (d) => !prevBufferTimestamps.has(d.timestamp)
       );
-
       return [...prevBuffer, ...uniqueNewData];
     });
   };
